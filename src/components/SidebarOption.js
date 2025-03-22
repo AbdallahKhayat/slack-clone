@@ -1,11 +1,24 @@
 import styled from "styled-components";
+import { db } from "../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { useDispatch } from "react-redux";
+import { enterRoom } from "../features/appSlice";
 
-function SidebarOption({ Icon, title, addChannelOption }) {
-  function addChannel() {
-    alert("clicked");
+function SidebarOption({ Icon, title, addChannelOption, id }) {
+  const dispatch = useDispatch();
+
+  async function addChannel() {
+    const channelName = prompt("Please enter the channel name");
+
+    if (channelName) {
+      await addDoc(collection(db, "rooms"), {
+        name: channelName,
+        timestamp: serverTimestamp(), //so the world timestamp will be the same for everyone from different country
+      });
+    }
   }
   function selectChannel() {
-    alert("selected");
+    if (id) dispatch(enterRoom({ roomId: id }));
   }
   return (
     <SidebarOptionContainer
@@ -40,9 +53,11 @@ const SidebarOptionContainer = styled.div`
   > h3 {
     font-weight: 500;
   }
-`;
-const SidebarOptionChannel = styled.div`
-  > span {
+  > h3 > span {
     padding: 15px;
   }
+`;
+const SidebarOptionChannel = styled.h3`
+  padding: 10px 0;
+  font-weight: 300;
 `;

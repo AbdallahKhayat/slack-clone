@@ -14,8 +14,12 @@ import {
   InsertComment,
   PeopleAlt,
 } from "@mui/icons-material";
+import { useCollection } from "react-firebase-hooks/firestore";
+import { db } from "../firebase";
 
 function Sidebar() {
+  //to access channels from firebase instead of using UseEffect then map
+  const [channels, loading, error] = useCollection(db.collection("rooms"));
   return (
     <SidebarContainer>
       <SidebarHeader>
@@ -28,7 +32,6 @@ function Sidebar() {
         </SidebarInfo>
         <CreateIcon />
       </SidebarHeader>
-
       <SidebarOption Icon={InsertComment} title="Threads" />
       <SidebarOption Icon={Inbox} title="Mentions & reactions" />
       <SidebarOption Icon={Drafts} title="Saved items" />
@@ -41,7 +44,10 @@ function Sidebar() {
       <SidebarOption Icon={ExpandMore} title="Channels" />
       <hr />
       <SidebarOption Icon={Add} addChannelOption title="Add Channel" />
-      <SidebarOption title="Youtube" />
+      {/*to access channels from firebase instead of using UseEffect then map*/}
+      {channels?.docs.map((doc) => (
+        <SidebarOption key={doc.id} id={doc.id} title={doc.data().name} />
+      ))}
     </SidebarContainer>
   );
 }
