@@ -15,11 +15,13 @@ import {
   PeopleAlt,
 } from "@mui/icons-material";
 import { useCollection } from "react-firebase-hooks/firestore";
-import { db } from "../firebase";
+import { auth, db } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 function Sidebar() {
   //to access channels from firebase instead of using UseEffect then map
   const [channels, loading, error] = useCollection(db.collection("rooms"));
+  const [user] = useAuthState(auth);
   return (
     <SidebarContainer>
       <SidebarHeader>
@@ -27,7 +29,7 @@ function Sidebar() {
           <h2>PAPA FAM HQ</h2>
           <h3>
             <FiberManualRecordIcon />
-            Abdallah Khayat
+            {user.displayName}
           </h3>
         </SidebarInfo>
         <CreateIcon />

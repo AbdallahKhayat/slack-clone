@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { db } from "../firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import { useDispatch } from "react-redux";
 import { enterRoom } from "../features/appSlice";
 
@@ -13,7 +13,6 @@ function SidebarOption({ Icon, title, addChannelOption, id }) {
     if (channelName) {
       await addDoc(collection(db, "rooms"), {
         name: channelName,
-        timestamp: serverTimestamp(), //so the world timestamp will be the same for everyone from different country
       });
     }
   }
